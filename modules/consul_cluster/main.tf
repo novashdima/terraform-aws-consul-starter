@@ -6,11 +6,6 @@ data "aws_vpc" "consul_vpc" {
   id = var.vpc_id
 }
 
-# data source for subnet ids in VPC
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.consul_vpc.id
-}
-
 # data source for availability zones
 data "aws_availability_zones" "available" {
   state = "available"
@@ -50,29 +45,28 @@ resource "aws_autoscaling_group" "consul_servers" {
   wait_for_capacity_timeout = "480s"
   health_check_grace_period = 15
   health_check_type         = "EC2"
-  vpc_zone_identifier       = data.aws_subnet_ids.default.ids
-  tags = [
-    {
-      key                 = "Name"
-      value               = "${var.name_prefix}-consul-server"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Cluster-Version"
-      value               = var.consul_cluster_version
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Environment-Name"
-      value               = "${var.name_prefix}-consul"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "owner"
-      value               = var.owner
-      propagate_at_launch = true
-    },
-  ]
+
+  tag {
+    key                 = "Name"
+    value               = "${var.name_prefix}-consul-server"
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "Cluster-Version"
+    value               = var.consul_cluster_version
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "Environment-Name"
+    value               = "${var.name_prefix}-consul"
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "owner"
+    value               = var.owner
+    propagate_at_launch = true
+  }
+
 
   lifecycle {
     create_before_destroy = true
