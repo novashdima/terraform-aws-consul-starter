@@ -85,3 +85,9 @@ variable "ami_id" {
   default     = ""
   description = "EC2 instance AMI ID to override the default Ubuntu AMI"
 }
+
+variable "subnet_ids" {
+  description = "The subnet IDs into which the EC2 Instances should be deployed. We recommend one subnet ID per node in the cluster_size variable. At least one of var.subnet_ids or var.availability_zones must be non-empty."
+  type        = list(string)
+  default     = null
+}
