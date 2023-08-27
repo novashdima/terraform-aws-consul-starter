@@ -9,6 +9,7 @@ module "consul_cluster" {
   key_name               = var.key_name
   name_prefix            = var.name_prefix
   vpc_id                 = var.vpc_id
+  subnet_ids             = var.subnet_ids
   public_ip              = var.public_ip
   consul_servers         = var.consul_servers
   consul_clients         = var.consul_clients
