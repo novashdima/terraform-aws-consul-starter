@@ -11,6 +11,10 @@ data "aws_subnets" "consul_vpc_subnets" {
     name   = "vpc-id"
     values = [var.vpc_id]
   }
+  filter {
+    name   = "tag:Name"
+    values = ["*public*"]
+  }
 }
 
 # data source for availability zones
