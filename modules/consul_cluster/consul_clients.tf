@@ -1,8 +1,10 @@
 # creates Consul autoscaling group for clients
 resource "aws_autoscaling_group" "consul_clients" {
+  count = var.consul_clients > 0 ? 1 : 0
+
   name                      = aws_launch_configuration.consul_clients.name
   launch_configuration      = aws_launch_configuration.consul_clients.name
-  availability_zones        = data.aws_availability_zones.available.zone_ids
+  availability_zones        = data.aws_availability_zones.available.names
   min_size                  = var.consul_clients
   max_size                  = var.consul_clients
   desired_capacity          = var.consul_clients
