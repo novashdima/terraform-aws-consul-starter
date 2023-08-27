@@ -6,6 +6,13 @@ data "aws_vpc" "consul_vpc" {
   id = var.vpc_id
 }
 
+data "aws_subnets" "consul_vpc_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+}
+
 # data source for availability zones
 data "aws_availability_zones" "available" {
   state = "available"
@@ -38,7 +45,8 @@ resource "random_id" "environment_name" {
 resource "aws_autoscaling_group" "consul_servers" {
   name                      = aws_launch_configuration.consul_servers.name
   launch_configuration      = aws_launch_configuration.consul_servers.name
-  availability_zones        = data.aws_availability_zones.available.names
+  //availability_zones        = data.aws_availability_zones.available.names
+  vpc_zone_identifier       = data.aws_subnets.consul_vpc_subnets.ids
   min_size                  = var.consul_servers
   max_size                  = var.consul_servers
   desired_capacity          = var.consul_servers
